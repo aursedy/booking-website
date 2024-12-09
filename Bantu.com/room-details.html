@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Room Details</title>
+</head>
+<body>
+    <nav>
+        <div class="nav__bar">
+          <div class="nav__header">
+            <div class="logo nav__logo">
+              <div>B</div>
+              <span>Bantu.com</span>
+            </div>
+            <div class="nav__menu__btn" id="menu-btn">
+              <i class="ri-menu-line"></i>
+            </div>
+          </div>
+          <ul class="nav__links" id="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="login.html">Login</a></li>
+          </ul>
+        </div>
+      </nav>
+
+  <main class="room-details section__container">
+    <h1 id="room-name" class="section__header"></h1>
+    <p id="room-description" class="section__description"></p>
+    <h3 id="room-price"></h3>
+    <div class="reviews">
+      <h2 class="section__subheader">Reviews</h2>
+      <ul id="review-list"></ul>
+    </div>
+    <button id="book-button" class="btn">Book</button>
+  </main>
+  <script>
+    // Get the "Book" button by its ID
+    const bookButton = document.getElementById('book-button');
+
+    // Add an event listener to the button for the 'click' event
+    bookButton.addEventListener('click', function() {
+        // Redirect the user to the payment page
+        window.location.href = 'booking.html';
+    });
+</script>
+  <script src="script.js"></script>
+</body>
+</html>

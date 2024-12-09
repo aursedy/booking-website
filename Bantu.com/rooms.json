@@ -1,0 +1,65 @@
+[
+    {
+      "id": 1,
+      "name": "Deluxe Suite",
+      "price": 399,
+      "description": "A luxurious suite with modern amenities and a stunning view.",
+      "reviews": [
+        { "user": "John Doe", "rating": 4.5, "comment": "Amazing experience!" },
+        { "user": "Jane Smith", "rating": 5, "comment": "Highly recommended!" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Family Suite",
+      "price": 599,
+      "description": "Spacious suite perfect for families, with multiple rooms.",
+      "reviews": [
+        { "user": "Alice Johnson", "rating": 4, "comment": "Comfortable for a family." },
+        { "user": "Bob Brown", "rating": 4.8, "comment": "Great value for the price." }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Luxury Penthouse",
+      "price": 799,
+      "description": "Top-tier accommodations on the highest floors of the hotel.",
+      "reviews": [
+        { "user": "Charlie Davis", "rating": 5, "comment": "Unparalleled luxury." },
+        { "user": "Emily Clark", "rating": 4.7, "comment": "Fantastic view and service." }
+      ]
+    },
+
+    {
+      "id": 4,
+      "name": "Luxury Penthouse",
+      "price": 899,
+      "description": "Exclusive penthouse suite with top-tier amenities.",
+      "reviews": [
+        {
+          "user": "John Doe",
+          "rating": 4.8,
+          "comment": "Fantastic stay and breathtaking views."
+        },
+        {
+          "user": "Alice Smith",
+          "rating": 4.7,
+          "comment": "Loved the experience, worth every penny."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Family Suite",
+      "price": 550,
+      "description": "Perfect suite for families with spacious rooms.",
+      "reviews": [
+        {
+          "user": "Robert Brown",
+          "rating": 4.3,
+          "comment": "Comfortable and perfect for our family vacation."
+        }
+      ]
+    }
+  ]
+  
