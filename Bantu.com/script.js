@@ -146,3 +146,92 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const registerForm = document.getElementById("register-form");
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      // Step 1: Retrieve form data
+      const firstName = document.getElementById("first-name").value.trim();
+      const lastName = document.getElementById("last-name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm-password").value;
+
+      // Step 2: Validation
+      if (!firstName || !lastName || !email || !password || !confirmPassword) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      // Step 3: Retrieve or initialize users array
+      let users = [];
+      const usersData = localStorage.getItem("users");
+      if (usersData) {
+        try {
+          users = JSON.parse(usersData);
+        } catch (e) {
+          console.error("Error parsing users data from localStorage:", e);
+        }
+      }
+
+      // Step 4: Check for existing email
+      if (users.some((user) => user.email === email)) {
+        alert("Email is already registered.");
+        return;
+      }
+
+      // Step 5: Save new user
+      const newUser = { firstName, lastName, email, password };
+      users.push(newUser);
+
+      try {
+        localStorage.setItem("users", JSON.stringify(users));
+        console.log("Users saved to localStorage:", users);
+        alert("Registration successful! Redirecting to login...");
+        window.location.href = "login.html";
+      } catch (e) {
+        console.error("Error saving users to localStorage:", e);
+        alert("Failed to save user. Please try again.");
+      }
+    });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("login-form");
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      // Get user inputs
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      // Retrieve users from localStorage
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Check if user exists
+      const user = users.find((user) => user.email === email && user.password === password);
+
+      if (user) {
+        alert(`Welcome, ${user.firstName}! Login successful.`);
+        localStorage.setItem("isAuthenticated", true); // Save login state
+        localStorage.setItem("currentUser", JSON.stringify(user)); // Save current user
+        window.location.href = "index.html"; // Redirect to homepage
+      } else {
+        alert("Invalid email or password. Please try again.");
+      }
+    });
+  }
+});
+
