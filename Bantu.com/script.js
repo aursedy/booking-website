@@ -73,6 +73,37 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Handle Payment Form Submission
+  const paymentForm = document.getElementById("payment-form");
+  if (paymentForm) {
+    paymentForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      // Simulate payment processing
+      alert("Processing your payment...");
+
+      // Retrieve user details from localStorage
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+
+      // Retrieve selected room details from localStorage
+      const selectedRoom = JSON.parse(localStorage.getItem("selectedRoom"));
+
+      // Create reservation object
+      const reservation = {
+        user: userDetails,
+        room: selectedRoom,
+        dateOfPurchase: new Date().toISOString(),
+        id: "AAA"
+      };
+
+      setTimeout(() => {
+        localStorage.setItem("reservations", JSON.stringify(reservation));
+        alert("Payment successful! Redirecting to homepage...");
+        window.location.href = "index.html";
+      }, 2000); // Simulate 2-second delay
+    });
+  }
+
   // Homepage: Fetch and Display Rooms
   if (window.location.pathname.endsWith("index.html")) {
     fetch("./rooms.json")
@@ -80,21 +111,26 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((rooms) => {
         const roomGrid = document.querySelector(".room__grid");
         roomGrid.innerHTML = ""; // Clear any existing content
-
-        rooms.forEach((room) => {
-          const roomCard = document.createElement("div");
-          roomCard.className = "room__card";
-          roomCard.innerHTML = `
-            <img src="assets/room-${room.id}.jpg" alt="room">
-            <div class="room__card__details">
-              <div>
-                <h4>${room.name}</h4>
-                <p>${room.description}</p>
+          rooms.forEach((room) => {
+            const roomCard = document.createElement("div");
+            roomCard.className = "room__card";
+            roomCard.innerHTML = `
+              <img src="assets/room-${room.id}.jpg" alt="room">
+              <div class="room__card__details">
+                <div>
+                  <h4>${room.name}</h4>
+                  <p>${room.description}</p>
+                  <p><strong>City:</strong> ${room.city}</p>
+                  <p><strong>Bed(s):</strong> ${room.beds}</p>
+                  <p><strong>Guest(s):</strong> ${room.maxGuests}</p>
+                </div>
+                <h3>$${room.price}<span>/night</span></h3>
               </div>
-              <h3>$${room.price}<span>/night</span></h3>
-            </div>
-            <button class="btn" id="details-button-${room.id}">Details</button>
-          `;
+              <button class="btn" id="details-button-${room.id}">Details</button>
+            `;
+          
+            // Append the room card to the container
+            //document.querySelector(".rooms__container").appendChild(roomCard);
 
           // Attach Click Listener for Room Navigation
           roomCard.addEventListener("click", () => {
@@ -125,6 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (window.location.pathname.endsWith("room-details.html")) {
     const room = JSON.parse(localStorage.getItem("selectedRoom"));
     if (room) {
+      const image = document.getElementById("room-img");
+      image.src =  `assets/room-${room.id}.jpg `;
       document.getElementById("room-name").textContent = room.name;
       document.getElementById("room-description").textContent = room.description;
       document.getElementById("room-price").textContent = `$${room.price}/night`;
@@ -145,65 +183,91 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "booking.html";
     });
   }
+
+  //filtering the rooms
+
+// Filter function
+// Fetch rooms from the JSON file and apply filters
+document.querySelector(".booking form").addEventListener("submit", async (event) => {
+  event.preventDefault(); // Prevent the form from reloading the page
+
+  // Collect filter criteria from the form
+  const filters = {
+    checkInDate: document.querySelector("#arrival").value,
+    checkOutDate: document.querySelector("#departure").value,
+    guests: parseInt(document.querySelector("#guests").value, 10),
+    beds: parseInt(document.querySelector("#beds").value, 10),
+    city: document.querySelector("#city").value
+  };
+
+  console.log("Filters submitted:", filters); // Debugging filter values
+
+  // Fetch rooms from JSON and filter them
+  try {
+    const response = await fetch("rooms.json");
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const rooms = await response.json();
+
+    // Apply the filter logic
+    const filteredRooms = rooms.filter((room) => {
+      const checkIn = new Date(filters.checkInDate);
+      const checkOut = new Date(filters.checkOutDate);
+      const availableFrom = new Date(room.availableFrom);
+      const availableTo = new Date(room.availableTo);
+
+      const isDateAvailable = checkIn >= availableFrom && checkOut <= availableTo;
+      const isGuestSuitable = room.maxGuests >= filters.guests;
+      const isBedSuitable = room.beds >= filters.beds;
+      const isCityMatch = filters.city ? room.city.toLowerCase() === filters.city.toLowerCase() : true;
+
+      return isDateAvailable && isGuestSuitable && isBedSuitable && isCityMatch;
+    });
+
+    // Display the filtered rooms
+    displayRooms(filteredRooms);
+  } catch (error) {
+    console.error("Error fetching or filtering rooms:", error);
+  }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const registerForm = document.getElementById("register-form");
+// Function to display filtered rooms
+function displayRooms(rooms) {
+  const container = document.querySelector(".room__container");
+  container.innerHTML = ""; // Clear previous results
 
-  if (registerForm) {
-    registerForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      // Step 1: Retrieve form data
-      const firstName = document.getElementById("first-name").value.trim();
-      const lastName = document.getElementById("last-name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirm-password").value;
-
-      // Step 2: Validation
-      if (!firstName || !lastName || !email || !password || !confirmPassword) {
-        alert("Please fill in all fields.");
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        alert("Passwords do not match.");
-        return;
-      }
-
-      // Step 3: Retrieve or initialize users array
-      let users = [];
-      const usersData = localStorage.getItem("users");
-      if (usersData) {
-        try {
-          users = JSON.parse(usersData);
-        } catch (e) {
-          console.error("Error parsing users data from localStorage:", e);
-        }
-      }
-
-      // Step 4: Check for existing email
-      if (users.some((user) => user.email === email)) {
-        alert("Email is already registered.");
-        return;
-      }
-
-      // Step 5: Save new user
-      const newUser = { firstName, lastName, email, password };
-      users.push(newUser);
-
-      try {
-        localStorage.setItem("users", JSON.stringify(users));
-        console.log("Users saved to localStorage:", users);
-        alert("Registration successful! Redirecting to login...");
-        window.location.href = "login.html";
-      } catch (e) {
-        console.error("Error saving users to localStorage:", e);
-        alert("Failed to save user. Please try again.");
-      }
-    });
+  if (rooms.length === 0) {
+    container.innerHTML = "<center><h2>No rooms match your criteria.</h2></center>";
+    return;
   }
+
+  rooms.forEach((room) => {
+    const roomCard = document.createElement("div");
+    roomCard.className = "room__card";
+    roomCard.innerHTML = `
+      <img src="assets/room-${room.id}.jpg" alt="room">
+      <div class="room__card__details">
+        <div>
+          <h4>${room.name}</h4>
+          <p>${room.description}</p>
+          <p><strong>City:</strong> ${room.city}</p>
+          <p><strong>Beds:</strong> ${room.beds}</p>
+        </div>
+        <h3>$${room.price}<span>/night</span></h3>
+      </div>
+      <button class="btn" id="details-button-${room.id}">Details</button>
+    `;
+
+    // Attach click listener for room navigation
+    roomCard.addEventListener("click", () => {
+      localStorage.setItem("selectedRoom", JSON.stringify(room));
+      window.location.href = "room-details.html";
+    });
+
+    container.appendChild(roomCard);
+  });
+}
 });
 
 document.addEventListener("DOMContentLoaded", () => {
