@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="login.css">
+  <title>User Profile</title>
+</head>
+<body>
+  <nav>
+    <div class="nav__bar">
+      <div class="nav__header">
+        <div class="logo nav__logo">
+          <div>B</div>
+          <span>Bantu.com</span>
+        </div>
+      </div>
+      <ul class="nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="profile.html" class="active">Profile</a></li>
+        <li><a href="#" onclick="logout()">Log Out</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="section__container">
+    <h1 class="section__header">Your Profile</h1>
+    <div class="profile__details">
+      <div class="input__group">
+        <label for="profile-first-name">First Name</label>
+        <input type="text" id="profile-first-name" readonly>
+      </div>
+      <div class="input__group">
+        <label for="profile-last-name">Last Name</label>
+        <input type="text" id="profile-last-name" readonly>
+      </div>
+      <div class="input__group">
+        <label for="profile-email">Email</label>
+        <input type="email" id="profile-email" readonly>
+      </div>
+      <button id="logout-button" class="btn" onclick="logout()">Log Out</button>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="script.js"></script>
+</body>
+</html>
