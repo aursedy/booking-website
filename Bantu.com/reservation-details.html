@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Room Details</title>
+</head>
+
+<body>
+    <nav>
+        <div class="nav__bar">
+            <div class="nav__header">
+                <div class="logo nav__logo">
+                    <div>B</div>
+                    <span>Bantu.com</span>
+                </div>
+                <div class="nav__menu__btn" id="menu-btn">
+                    <i class="ri-menu-line"></i>
+                </div>
+            </div>
+            <ul class="nav__links" id="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="room-details section__container">
+        <img id="room-img" src="#" alt="room">
+        <h1 id="room-name" class="section__header"></h1>
+        <p id="room-description" class="section__description"></p>
+        <h3 id="room-price"></h3>
+        <div class="reviews">
+            <h2 class="section__subheader">Reviews</h2>
+            <ul id="review-list"></ul>
+        </div>
+        <button id="cancel-button" class="btn">Cancel</button>
+    </main>
+    <script>
+        // filling the room details 
+        const room = JSON.parse(localStorage.getItem("selectedRoom"));
+        if (room) {
+            const image = document.getElementById("room-img");
+            image.src = `assets/room-${room.id}.jpg `;
+            document.getElementById("room-name").textContent = room.name;
+            document.getElementById("room-description").textContent = room.description;
+            document.getElementById("room-price").textContent = `$${room.price}/night`;
+
+            const reviewList = document.getElementById("review-list");
+            room.reviews.forEach((review) => {
+                const li = document.createElement("li");
+                li.textContent = `${review.user} (${review.rating}/5): ${review.comment}`;
+                reviewList.appendChild(li);
+            });
+        } else {
+            alert("No room selected. Redirecting to homepage.");
+            window.location.href = "index.html";
+        }
+        
+        // Get the "Book" button by its ID
+        const bookButton = document.getElementById('cancel-button');
+
+        // Add an event listener to the button for the 'click' event
+        bookButton.addEventListener('click', function () {
+            const userConfirmed = window.confirm("Are you sure you want to cancell this reservation?");
+
+            if (userConfirmed) {
+                console.log("User confirmed. Proceeding with the action.");
+                alert("Processing...");
+
+                setTimeout(() => {
+                    localStorage.removeItem("reservations");
+                    alert("Reservation has been succesfully canceled! Redirecting to homepage...");
+                    window.location.href = "index.html";
+                }, 2000);
+                // Add the logic to execute when the user confirms
+            } else {
+                console.log("User canceled the action.");
+                // Add the logic to execute when the user cancels
+            }
+        });
+    </script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
